@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Catalog.Service.Dtos 
+namespace Catalog.Service 
 {
     public record ItemDto(Guid Id, string Name, string Description, decimal Price, DateTimeOffset CreatedDateAt);
     public record CreateItemDto([Required]string Name, string Description, [Range(0,1000)]decimal Price);

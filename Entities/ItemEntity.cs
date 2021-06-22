@@ -1,8 +1,8 @@
 using System;
 
-namespace Catalog.Service.Entitiy 
+namespace Catalog.Service.Entities 
 {
-    public class ItemEntity
+    public class Item
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -10,10 +10,7 @@ namespace Catalog.Service.Entitiy
         public string Description { get; set; }
         
         public decimal Price { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        
-        
-        
+        public DateTimeOffset CreatedDateAt { get; set; }
         
     }
 }

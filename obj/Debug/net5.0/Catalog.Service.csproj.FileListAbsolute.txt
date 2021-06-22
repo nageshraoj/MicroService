@@ -27,3 +27,15 @@ C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\obj\Debug\net5
 C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\obj\Debug\net5.0\ref\Catalog.Service.dll
 C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\obj\Debug\net5.0\Catalog.Service.pdb
 C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\obj\Debug\net5.0\Catalog.Service.genruntimeconfig.cache
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\DnsClient.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\MongoDB.Bson.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\MongoDB.Driver.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\MongoDB.Driver.Core.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\MongoDB.Libmongocrypt.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\SharpCompress.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\win\native\libzstd.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\win\native\snappy32.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\win\native\snappy64.dll
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
+C:\Users\nages\Documents\Training\CSharp\app4\src\Catalog.Service\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll

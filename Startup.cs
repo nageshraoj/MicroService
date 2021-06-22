@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.Service.Repositories;
+using Catalog.Service.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,11 +13,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 
 namespace Catalog.Service
 {
     public class Startup
     {
+
+        private ServieSetting servieSetting;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,8 +34,23 @@ namespace Catalog.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 
-            services.AddControllers();
+            servieSetting = Configuration.GetSection(nameof(ServieSetting)).Get<ServieSetting>();
+
+            services.AddSingleton(ServiceProvider =>
+            {
+            var mongodbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+            var mongoClient = new MongoClient(mongodbSettings.connectionString);
+            return mongoClient.GetDatabase(servieSetting.ServiceName);
+        });
+
+            services.AddSingleton<IItemRepository, ItemRepository>();
+
+            services.AddControllers(options =>{
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.Service", Version = "v1" });

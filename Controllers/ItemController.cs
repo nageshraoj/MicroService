@@ -1,73 +1,83 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalog.Service.Dtos;
+using System.Threading.Tasks;
+using Catalog.Service;
+using Catalog.Service.Entities;
+using Catalog.Service.Repositories;
 using Microsoft.AspNetCore.Mvc;
+
 
     [ApiController]
     [Route("api/[controller]")]
     public class CatalogController : ControllerBase
     {
 
-    private static readonly List<ItemDto> items = new List<ItemDto>()
-     {
-        new ItemDto(Guid.NewGuid(),"Antidone","Medicine",200,DateTimeOffset.UtcNow),
-        new ItemDto(Guid.NewGuid(),"Paracitamal","Pain killer",120,DateTimeOffset.UtcNow),
-        new ItemDto(Guid.NewGuid(),"Anit-Biotic","Good for health",100,DateTimeOffset.UtcNow),
-        new ItemDto(Guid.NewGuid(),"Vitamin","Healthy",100,DateTimeOffset.UtcNow)
-    };
+    private readonly IItemRepository itemRepository;
+
+    public CatalogController(IItemRepository itemRepo)
+    {
+        this.itemRepository = itemRepo;
+    }
 
     [HttpGet]
-    public IEnumerable<ItemDto> GetCatalogItems()
+    public async Task< IEnumerable<ItemDto>> GetCatalogItemsAsync()
     {
-        return items.ToList();
+        var items = (await itemRepository.GetItemsAsync())
+                    .Select(item => item.AsDto());
+        return items;
     }
 
     [HttpGet("{id}")]
-    public ActionResult< ItemDto> GetCatalogItem(Guid id)
+    public async Task< ActionResult< ItemDto>> GetCatalogItemAsync(Guid id)
     {
-
-        var item = items.Where(item => item.Id == id).SingleOrDefault();
-        if(item !=null){
-           return   item;  
+        
+        var item = (await itemRepository.GetItemAsync(id));
+        if(item==null)
+        {
+            return NotFound();
         }
-        return NotFound();
+        return item.AsDto();
     }
 
     [HttpPost]
-    public ActionResult<ItemDto> AddCatalogItem(CreateItemDto item)
+    public async Task<ActionResult<ItemDto>> AddCatalogItemAsync(CreateItemDto item) 
     {
-        var newItem = new ItemDto(Guid.NewGuid(),item.Name, item.Description,item.Price,  DateTimeOffset.UtcNow);
-        items.Add(newItem);
-        return CreatedAtAction(nameof(GetCatalogItem),new {id =newItem.Id}, newItem);
+        var newItem = new Item { Id= Guid.NewGuid(),
+        Name= item.Name,
+        Description= item.Description, 
+        Price= item.Price,
+        CreatedDateAt= DateTimeOffset.UtcNow };
+        await itemRepository.AddItemAsync(newItem);
+        
+        return CreatedAtAction(nameof(GetCatalogItemAsync), new {id = newItem.Id}, newItem);
     }
 
     [HttpPut("{id}")]
 
-    public IActionResult UpdateItem(Guid id, UpdateItemDto item )
+    public async Task< IActionResult> UpdateItemAsync(Guid id, UpdateItemDto item )
     {
-        var index = items.FindIndex(itm => itm.Id == id);
-        if(index==-1) return NotFound();
-        var currentTtem = items.Where(each => each.Id == id).SingleOrDefault();
-
-        var updatedItem = currentTtem with
+        var existingItem = await itemRepository.GetItemAsync(id);
+        if(existingItem==null)
         {
-            Name = item.Name,
-            Description = item.Description,
-            Price = item.Price
-        };
-        Console.WriteLine(updatedItem);
-   
-        items[index] = updatedItem;
+            return NotFound();
+        }
+        existingItem.Name = item.Name;
+        existingItem.Description = item.Description;
+        existingItem.Price = existingItem.Price;
+        await itemRepository.UpdateItemAsync(existingItem);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult RemoveItem(Guid id)
+    public async Task< IActionResult> RemoveItemAsync(Guid id)
     {
-        var index = items.FindIndex(item => item.Id == id);
-        if(index==-1) return NotFound();
-        items.RemoveAt(index);
+         var existingItem = await itemRepository.GetItemAsync(id);
+        if(existingItem==null)
+        {
+            return NotFound();
+        }
+        await itemRepository.RemoveItemAsync(id);
         return NoContent();
 
     }
